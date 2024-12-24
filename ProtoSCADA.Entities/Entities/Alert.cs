@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace ProtoSCADA.Entities.Entities
 {
     public class Alert
     {
+        [Key]
         public int ID { get; set; }
 
         public float ThersholdValue {  get; set; }
@@ -23,7 +25,7 @@ namespace ProtoSCADA.Entities.Entities
 
     }
 
-    public enum AlertCondition
+    public enum AlertCondition : byte // so that we can optimize storage
     {
         GreaterThan, LessThan, Equal
     }

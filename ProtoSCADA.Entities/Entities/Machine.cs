@@ -32,12 +32,9 @@ namespace ProtoSCADA.Entities.Entities
 
         public ICollection<Metric> Metrics { get; set; } = new HashSet<Metric>();
 
-
-
-
     }
-    public enum MachineStatus
+    public enum MachineStatus : byte // so that we can optimize storage
     {
-        Running,Idle,Stopped
+        Running, Idle, Stopped
     }
 }
