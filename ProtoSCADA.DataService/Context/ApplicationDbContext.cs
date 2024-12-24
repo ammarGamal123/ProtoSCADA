@@ -20,12 +20,12 @@ namespace ProtoSCADA.DataService.Context
 
         }
 
-        DbSet<Alert> Alerts { get; set; }
-        DbSet<Event> Events { get; set; }
-        DbSet<Factory> Factorys { get; set; }   
-        DbSet<Machine> Machines { get; set; }
-        DbSet<Metric> Metrics { get; set; }
-        DbSet<User> Users { get; set; } 
+        public DbSet<Alert> Alerts { get; set; }
+        public DbSet<Event> Events { get; set; }
+        public DbSet<Factory> Factorys { get; set; }   
+        public DbSet<Machine> Machines { get; set; }
+        public DbSet<Metric> Metrics { get; set; }
+        public DbSet<User> Users { get; set; } 
 
 
 
