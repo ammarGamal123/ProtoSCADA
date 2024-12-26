@@ -1,40 +1,92 @@
-﻿using ProtoSCADA.DataService.Repositories;
+﻿using ProtoSCADA.Data.Repositories;
 using ProtoSCADA.Entities.Entities;
 using ProtoSCADA.Service.Abstract;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ProtoSCADA.Service.Implementation
 {
-    public class UserSerivce : IUserService
+    public class UserService : IUserService
     {
-        public IUnitOfWork _unitOfWork;
-        public Task AddUserAsync(User user)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public UserService(IUnitOfWork unitOfWork)
         {
-            throw new NotImplementedException();
+            _unitOfWork = unitOfWork;
         }
 
-        public Task DeleteUser(int id)
+        public async Task AddUserAsync(User user)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (user == null)
+                    throw new ArgumentNullException(nameof(user));
+
+                await _unitOfWork.Users.AddAsync(user);
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error adding user: {ex.Message}", ex);
+            }
         }
 
-        public Task<IEnumerable<User>> GetAllUsers()
+        public async Task DeleteUserAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _unitOfWork.Users.DeleteAsync(id);
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error deleting user with ID {id}: {ex.Message}", ex);
+            }
         }
 
-        public Task<User> GetUserById(int id)
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _unitOfWork.Users.GetAllAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error retrieving all users: {ex.Message}", ex);
+            }
         }
 
-        public Task UpdateUser(User user)
+        public async Task<User> GetUserByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var user = await _unitOfWork.Users.GetByIdAsync(id);
+                if (user == null)
+                    throw new KeyNotFoundException($"User with ID {id} not found.");
+
+                return user;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error retrieving user by ID {id}: {ex.Message}", ex);
+            }
+        }
+
+        public async Task UpdateUser(User user)
+        {
+            try
+            {
+                if (user == null)
+                    throw new ArgumentNullException(nameof(user));
+
+                _unitOfWork.Users.Update(user);
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error updating user: {ex.Message}", ex);
+            }
         }
     }
 }

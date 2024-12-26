@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ProtoSCADA.DataService.Context;
+using ProtoSCADA.Data.Context;
 
 #nullable disable
 
-namespace ProtoSCADA.DataService.Migrations
+namespace ProtoSCADA.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20241224125618_InitialCreate")]

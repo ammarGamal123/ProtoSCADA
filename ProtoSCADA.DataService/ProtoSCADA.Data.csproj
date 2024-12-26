@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ProtoSCADA.Entities\ProtoSCADA.Entities.csproj" />
+    
   </ItemGroup>
 
 </Project>
