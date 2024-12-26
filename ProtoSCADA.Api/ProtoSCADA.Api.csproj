@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ProtoSCADA.DataService\ProtoSCADA.Data.csproj" />
+    <ProjectReference Include="..\ProtoSCADA.Service\ProtoSCADA.Service.csproj" />
   </ItemGroup>
 
 </Project>

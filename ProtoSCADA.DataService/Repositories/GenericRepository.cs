@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProtoSCADA.DataService.Context;
+using ProtoSCADA.Data.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProtoSCADA.DataService.Repositories
+namespace ProtoSCADA.Data.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
@@ -35,13 +35,13 @@ namespace ProtoSCADA.DataService.Repositories
             }
         }
 
-        public async void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
             try
             {
                 var entity = await _dbSet.FindAsync(id);
                 if (entity == null)
-                    throw new ArgumentNullException(nameof(entity));
+                    throw new KeyNotFoundException($"Entity with ID {id} not found.");
 
                 _dbSet.Remove(entity);
             }
@@ -50,6 +50,7 @@ namespace ProtoSCADA.DataService.Repositories
                 throw new ApplicationException($"Error deleting entity: {ex.Message}", ex);
             }
         }
+
 
         public async Task<IEnumerable<T>> FindAsync(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
         {

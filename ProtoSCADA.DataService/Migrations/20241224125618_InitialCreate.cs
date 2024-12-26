@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ProtoSCADA.DataService.Migrations
+namespace ProtoSCADA.Data.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

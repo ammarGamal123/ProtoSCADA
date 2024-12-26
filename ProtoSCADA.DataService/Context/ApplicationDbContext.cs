@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProtoSCADA.DataService.Context
+namespace ProtoSCADA.Data.Context
 {
     public class ApplicationDbContext : DbContext
     {

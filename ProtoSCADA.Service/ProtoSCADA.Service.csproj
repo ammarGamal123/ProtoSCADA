@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ProtoSCADA.DataService\ProtoSCADA.Data.csproj" />
+    <ProjectReference Include="..\ProtoSCADA.Entities\ProtoSCADA.Entities.csproj" />
+  </ItemGroup>
+
 </Project>

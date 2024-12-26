@@ -9,6 +9,6 @@ namespace ProtoSCADA.Service.Abstract
 {
     public interface IEventService
     {
-        Task<User>
+        //Task<User>
     }
 }

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoSCADA.Entities", "Prot
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoSCADA.Service", "ProtoSCADA.Service\ProtoSCADA.Service.csproj", "{77A3D125-2530-4628-846F-E55CBE09DAB6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoSCADA.MVC", "ProtoSCADA.MVC\ProtoSCADA.MVC.csproj", "{EE284BCA-45A3-4471-BAEB-CDDABE4F1CAC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{77A3D125-2530-4628-846F-E55CBE09DAB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77A3D125-2530-4628-846F-E55CBE09DAB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77A3D125-2530-4628-846F-E55CBE09DAB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE284BCA-45A3-4471-BAEB-CDDABE4F1CAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE284BCA-45A3-4471-BAEB-CDDABE4F1CAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE284BCA-45A3-4471-BAEB-CDDABE4F1CAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE284BCA-45A3-4471-BAEB-CDDABE4F1CAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
