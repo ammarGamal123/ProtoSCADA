@@ -1,0 +1,18 @@
+﻿@model ProtoSCADA.Entities.Entities.Machine
+@{
+    ViewData["Title"] = "Delete Machine";
+}
+
+<h2>Delete Machine</h2>
+
+<p>Are you sure you want to delete the following machine?</p>
+<div>
+    <h4>@Model.Name</h4>
+    <p>Status: @Model.Status</p>
+</div>
+
+<form asp-action="ConfirmDelete" method="post">
+    <input type="hidden" asp-for="ID" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

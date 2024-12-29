@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ProtoSCADA.Entities.Entities;
+using ProtoSCADA.Service.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +8,12 @@ using System.Threading.Tasks;
 
 namespace ProtoSCADA.Service.Abstract
 {
-    internal interface IAlertService
+    public interface IAlertService
     {
+        Task<ProcessResult<Alert>> GetAlertByIdAsync(int id);
+        Task<ProcessResult<IEnumerable<Alert>>> GetAllAlertsAsync();
+        Task<ProcessResult<bool>> AddAlertAsync(Alert alert);
+        Task<ProcessResult<bool>> UpdateAlertAsync(Alert alert);
+        Task<ProcessResult<bool>> DeleteAlertAsync(int id);
     }
 }

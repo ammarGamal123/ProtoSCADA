@@ -14,8 +14,9 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddHttpClient<UserController>(client =>
 {
-    client.BaseAddress = new Uri(builder.Configuration["http://protoscada.runasp.net/"]);
+    client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"]); // This will read ApiBaseUrl from appsettings.json
 });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -35,6 +36,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=User}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

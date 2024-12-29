@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProtoSCADA.Data.Repositories
+namespace ProtoSCADA.Data.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
@@ -18,7 +18,7 @@ namespace ProtoSCADA.Data.Repositories
 
 
         Task<int> SaveAsync();
-        
+
 
     }
 }

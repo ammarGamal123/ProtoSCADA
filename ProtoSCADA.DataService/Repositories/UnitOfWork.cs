@@ -1,5 +1,6 @@
 ﻿using ProtoSCADA.Data.Context;
 using ProtoSCADA.Data.Context;
+using ProtoSCADA.Data.Interfaces;
 using ProtoSCADA.Entities.Entities;
 using System;
 using System.Collections.Generic;

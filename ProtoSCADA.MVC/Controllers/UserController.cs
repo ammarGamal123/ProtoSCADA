@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using Org.BouncyCastle.Crypto.Generators;
 using Microsoft.EntityFrameworkCore;
+using ProtoSCADA.Service.Utilities;
 
 namespace ProtoSCADA.MVC.Controllers
 {
@@ -84,20 +85,27 @@ namespace ProtoSCADA.MVC.Controllers
             return RedirectToAction(nameof(Login));
         }
 
-        // GET: User/Index
         public async Task<IActionResult> Index()
         {
             try
             {
-                var users = await _httpClient.GetFromJsonAsync<List<User>>("api/user");
-                return View(users);
+                var response = await _httpClient.GetFromJsonAsync<ProcessResult<List<User>>>("api/User");
+                if (response?.IsSuccess == true && response.Data != null)
+                {
+                    return View(response.Data);
+                }
+
+                ViewData["Error"] = response?.ErrorMessage ?? "Failed to fetch users data.";
             }
             catch (Exception ex)
             {
-                ViewData["Error"] = $"Error loading users: {ex.Message}";
-                return View(new List<User>());
+                ViewData["Error"] = $"Error fetching machine data: {ex.Message}";
             }
+
+            return View(new List<Machine>());
         }
+
+
 
         // GET: User/Create
         public IActionResult Create()

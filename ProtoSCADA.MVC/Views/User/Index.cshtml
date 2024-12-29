@@ -1,30 +1,41 @@
-﻿@model List<ProtoSCADA.Entities.Entities.User>
+﻿@using ProtoSCADA.Entities.Entities
+@model List<User>
 
-<h1>User List</h1>
+@{
+    ViewData["Title"] = "User List";
+}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
+<h2 class="text-center text-primary">@ViewData["Title"]</h2>
+
+@if (ViewData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @ViewData["Error"]
+    </div>
+}
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover table-bordered">
+        <thead class="table-dark">
             <tr>
-                <td>@user.ID</td>
-                <td>@user.Name</td>
-                <td>@user.Email</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@user.ID">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@user.ID">Delete</a>
-                </td>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Created At</th>
             </tr>
-        }
-    </tbody>
-</table>
-
-<a asp-action="Create" class="btn btn-primary">Create New User</a>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.ID</td>
+                    <td>@user.Name</td>
+                    <td>@user.Email</td>
+                    <td>@user.Role</td>
+                    <td>@user.CreatedAt.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
