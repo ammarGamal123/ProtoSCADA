@@ -1,44 +1,168 @@
-﻿@model ProtoSCADA.Entities.Entities.Machine
-
+﻿@model ProtoSCADA.Entities.DTOs.MachineDto
 @{
     ViewData["Title"] = "Machine Details";
 }
 
-@* Add Bootstrap for responsiveness and styling *@
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<div class="mt-5 container">
+    <h2 class="mb-4 text-success text-center">Machine Details</h2>
 
-<div class="container my-5">
-    <h2 class="text-center text-primary mb-4">@ViewData["Title"]</h2>
-
-    <div class="card shadow-lg p-4">
+    <!-- Machine Info Card -->
+    <div class="card">
         <div class="card-header bg-primary text-white">
-            <h4 class="m-0">@Model.Name</h4>
+            <h4>Machine ID: @Model.MachineID</h4>
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <p><strong>Status:</strong> <span class="badge bg-@(Model.Status.ToString() == "" ? "success" : "danger")">@Model.Status</span></p>
-                    <p><strong>Machine Type:</strong> @Model.Type</p>
-                    <p><strong>Last Maintenance:</strong> @Model.LastMaintance.ToShortDateString()</p>
-                </div>
-                <div class="col-md-6">
-                    <p><strong>Factory:</strong> @Model.Factory.Name</p>
+            <p><strong>Machine Type:</strong> @Model.MachineType</p>
+            <p><strong>Status:</strong> @Model.Status</p>
+            <p><strong>Last Maintenance:</strong> @Model.LastMaintance.ToString("yyyy-MM-dd")</p>
+            <p><strong>Factory Name:</strong> @Model.FactorName</p>
+        </div>
+    </div>
+
+    <!-- Machine Stats Card -->
+    <div class="mt-4 card">
+        <div class="card-header bg-info text-white">
+            <h4>Machine Statistics</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Operating Hours:</strong> 2000 hours</p>
+            <p><strong>Failures in Last 30 Days:</strong> 3</p>
+            <p><strong>Average Downtime:</strong> 5 hours per month</p>
+            <p><strong>Efficiency:</strong> 85%</p>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="mt-5">
+        <div class="row">
+            <!-- Line Chart for Machine Performance -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-warning text-white">
+                        <h4>Machine Performance (Last 6 Months)</h4>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
                 </div>
             </div>
-            <div class="text-center mt-4">
-                <a href="@Url.Action("Index", "Machine")" class="btn btn-secondary btn-lg">Go Back</a>
+
+            <!-- Bar Chart for Monthly Maintenance -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-warning text-white">
+                        <h4>Monthly Maintenance Logs</h4>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="maintenanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pie Chart for Machine Status Distribution -->
+        <div class="mt-4 row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h4>Machine Status Distribution</h4>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="statusChart" width="300" height="300"></canvas> <!-- Reduced size -->
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- Go Back Button -->
+    <div class="mt-3">
+        <a href="/Machine/Index" class="btn btn-secondary">Go Back</a>
+    </div>
 </div>
 
-@* Adding some custom styling *@
-<style>
-    .badge {
-        font-size: 1rem;
-    }
+@section Scripts {
+        <!-- Chart.js CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    .card-header {
-        font-size: 1.25rem;
-    }
-</style>
+        <script>
+            // Mock Data for the performance chart (Line Chart)
+            var performanceCtx = document.getElementById('performanceChart').getContext('2d');
+            var performanceChart = new Chart(performanceCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Machine Performance',
+                        data: [80, 75, 90, 85, 70, 88], // Mock performance data (in percentage)
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.dataset.label + ': ' + tooltipItem.raw + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Mock Data for the maintenance chart (Bar Chart)
+            var maintenanceCtx = document.getElementById('maintenanceChart').getContext('2d');
+            var maintenanceChart = new Chart(maintenanceCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Maintenance Hours',
+                        data: [10, 8, 12, 6, 15, 9], // Mock maintenance hours data
+                        backgroundColor: 'rgba(153, 102, 255, 0.6)',
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                    }
+                }
+            });
+
+            // Mock Data for the machine status chart (Pie Chart)
+            var statusCtx = document.getElementById('statusChart').getContext('2d');
+            var statusChart = new Chart(statusCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Operational', 'Maintenance', 'Idle', 'Faulty'],
+                    datasets: [{
+                        data: [70, 15, 10, 5], // Mock status data percentages
+                        backgroundColor: ['#4CAF50', '#FF9800', '#F44336', '#9E9E9E'],
+                        borderColor: ['#fff', '#fff', '#fff', '#fff'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    }
+                }
+            });
+        </script>
+}

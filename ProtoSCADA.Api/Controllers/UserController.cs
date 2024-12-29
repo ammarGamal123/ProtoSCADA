@@ -1,7 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProtoSCADA.Entities.Entities;
+using ProtoSCADA.Entities.DTOs;
 using ProtoSCADA.Service.Abstract;
+using ProtoSCADA.Service.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ProtoSCADA.Api.Controllers
 {
@@ -9,7 +14,7 @@ namespace ProtoSCADA.Api.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        public IUserService _userService;
+        private readonly IUserService _userService;
 
         public UserController(IUserService userService)
         {
@@ -20,31 +25,60 @@ namespace ProtoSCADA.Api.Controllers
         /// Get all users.
         /// </summary>
         /// <returns>A list of all users.</returns>
-        [HttpGet(Name ="Get All Users")]
-        public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
+        [HttpGet(Name = "Get All Users")]
+        public async Task<ActionResult<ProcessResult<IEnumerable<UserDto>>>> GetAllUsers()
         {
             try
             {
-                var users = await _userService.GetAllUsersAsync();
-                return Ok(users);
+                var result = await _userService.GetAllUsersAsync();
+                if (result.IsSuccess)
+                {
+                    // Convert to DTO before returning
+                    var userDtos = result.Data.Select(user => new UserDto
+                    {
+                        ID = user.ID,
+                        Name = user.Name,
+                        Email = user.Email,
+                        Role = user.Role,
+                        CreatedAt = user.CreatedAt
+                    });
+
+                    return Ok(ProcessResult<IEnumerable<UserDto>>.Success(result.Message, userDtos));
+                }
+                return StatusCode(500, new { Message = "An error occurred while retrieving users." });
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return StatusCode(500, new { Message = "An error occurred while retrieving users.", Details = ex.Message });
             }
         }
 
+        /// <summary>
+        /// Get a user by ID.
+        /// </summary>
+        /// <param name="id">The user ID.</param>
+        /// <returns>A user details.</returns>
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<User>> GetUserByID (int id)
+        public async Task<ActionResult<UserDto>> GetUserByID(int id)
         {
             try
             {
-                var user = await _userService.GetUserByIdAsync(id);
-                if (user == null)
+                var result = await _userService.GetUserByIdAsync(id);
+                if (result.IsSuccess)
                 {
-                    return NotFound(new { Message = $"User with ID {id} not found." });
+                    // Convert to DTO before returning
+                    var userDto = new UserDto
+                    {
+                        ID = result.Data.ID,
+                        Name = result.Data.Name,
+                        Email = result.Data.Email,
+                        Role = result.Data.Role,
+                        CreatedAt = result.Data.CreatedAt
+                    };
+                    return Ok(ProcessResult<UserDto>.Success(result.Message, userDto));
                 }
-                return Ok(user);
+
+                return NotFound(new { Message = $"User with ID {id} not found." });
             }
             catch (Exception ex)
             {
@@ -52,19 +86,25 @@ namespace ProtoSCADA.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete a user by ID.
+        /// </summary>
+        /// <param name="id">The user ID to delete.</param>
+        /// <returns>Status of deletion.</returns>
         [HttpDelete("{id:int}")]
-        public async Task<ActionResult> DeleteUser (int id)
+        public async Task<ActionResult> DeleteUser(int id)
         {
             try
             {
-                var userToDelete = _userService.DeleteUserAsync(id);
-                if (userToDelete == null)
+                var result = await _userService.DeleteUserAsync(id);
+                if (result.IsSuccess)
                 {
-                    return NotFound(new { Mewssage = $"User with ID {id} not found." });
+                    return Ok(new { Message = $"User with ID {id} deleted successfully." });
                 }
-                return Ok($"User with {id}, Deleted Successfully.");
+
+                return NotFound(new { Message = $"User with ID {id} not found." });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, new { Message = "An error occurred while trying to delete the user.", Details = ex.Message });
             }

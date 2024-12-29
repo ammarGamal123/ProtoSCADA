@@ -21,11 +21,11 @@ namespace ProtoSCADA.Entities.Entities
 
         [ForeignKey("User")]
         public int UserID { get; set; }
-        public User User { get; set; }
+        public virtual User User { get; set; }
 
         [ForeignKey("Machine")]
         public int MachineID {  get; set; }
-        public Machine Machine { get; set; }
+        public virtual Machine Machine { get; set; }
 
 
     }

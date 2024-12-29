@@ -54,19 +54,22 @@ namespace ProtoSCADA.Service.Implementation
             }
         }
 
-        // Retrieve all users
         public async Task<ProcessResult<IEnumerable<User>>> GetAllUsersAsync()
         {
             try
             {
                 var users = await _unitOfWork.Users.GetAllAsync();
+
+                // Return success result with data
                 return ProcessResult<IEnumerable<User>>.Success("Users retrieved successfully.", users);
             }
             catch (Exception ex)
             {
-                return ProcessResult<IEnumerable<User>>.Failure($"Error retrieving users: {ex.Message}", null);
+                // Return failure with appropriate error message and an empty collection instead of null
+                return ProcessResult<IEnumerable<User>>.Failure($"Error retrieving users: {ex.Message}", Enumerable.Empty<User>());
             }
         }
+
 
         // Retrieve a user by ID
         public async Task<ProcessResult<User>> GetUserByIdAsync(int id)

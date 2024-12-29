@@ -22,7 +22,7 @@ namespace ProtoSCADA.Entities.Entities
 
         public DateTime CreatedAt { get; set; }
 
-        public ICollection<Alert> Alerts { get; set; } = new HashSet<Alert>();
+        public virtual ICollection<Alert> Alerts { get; set; } = new HashSet<Alert>();
 
     }
 }

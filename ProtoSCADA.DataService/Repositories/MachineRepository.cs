@@ -31,7 +31,7 @@ namespace ProtoSCADA.Data.Repositories
         {
             try
             {
-                return await _dbSet.Include(m => m.Factory).FirstOrDefaultAsync();
+                return await _dbSet.Include(m => m.Factory).FirstOrDefaultAsync(m => m.ID == machineId);
             }
             catch (Exception ex)
             {

@@ -1,43 +1,37 @@
-﻿@using ProtoSCADA.Entities.Entities
-@model List<Machine>
-
+﻿@model IEnumerable<ProtoSCADA.Entities.DTOs.MachineDto>
 @{
-    ViewData["Title"] = "Machine List";
+    ViewData["Title"] = "Machines";
 }
 
-<h2 class="text-center text-primary">@ViewData["Title"]</h2>
-
-@if (ViewData["Error"] != null)
-{
-        <div class="alert alert-danger">
-        @ViewData["Error"]
-        </div>
-}
-
-<div class="table-responsive">
-    <table class="table table-striped table-hover table-bordered">
-        <thead class="table-dark">
+<div class="mt-5 container">
+    <h2 class="mb-4 text-primary text-center">Machine List</h2>
+    <table class="table-striped table-bordered table">
+        <thead class="thead-dark">
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Type</th>
+                <th>#</th>
+                <th>Machine Type</th>
                 <th>Status</th>
                 <th>Last Maintenance</th>
                 <th>Factory Name</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var machine in Model)
             {
-                    <tr>
-                        <td>@machine.ID</td>
-                        <td>@machine.Name</td>
-                        <td>@machine.Type</td>
-                        <td>@machine.Status</td>
-                        <td>@(machine.LastMaintance.ToShortDateString() ?? "N/A")</td> <!-- Null check for LastMaintenance -->
-                        <td>@(machine.Factory?.Name ?? "N/A")</td> <!-- Null check for Factory.Name -->
-                    </tr>
+                <tr>
+                    <td>@machine.MachineID</td>
+                    <td>@machine.MachineType</td>
+                    <td>@machine.Status</td>
+                    <td>@machine.LastMaintance.ToString("yyyy-MM-dd")</td>
+                    <td>@machine.FactorName</td>
+                    <td>
+                        <a href="/Machine/Details/@machine.MachineID" class="btn btn-info btn-sm">View Details</a>
+                        <a href="/Machine/Delete/@machine.MachineID" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
+    <a href="/Home/Index" class="btn btn-secondary mt-3">Go Back</a>
 </div>

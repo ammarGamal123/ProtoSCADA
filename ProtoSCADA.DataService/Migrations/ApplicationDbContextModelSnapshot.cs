@@ -51,7 +51,7 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Alerts");
+                    b.ToTable("Alerts", (string)null);
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Event", b =>
@@ -85,7 +85,7 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", (string)null);
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Factory", b =>
@@ -109,7 +109,7 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Factorys");
+                    b.ToTable("Factorys", (string)null);
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Machine", b =>
@@ -141,7 +141,7 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasIndex("FactoryID");
 
-                    b.ToTable("Machines");
+                    b.ToTable("Machines", (string)null);
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Metric", b =>
@@ -169,7 +169,7 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasIndex("MachineID");
 
-                    b.ToTable("Metrics");
+                    b.ToTable("Metrics", (string)null);
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.User", b =>
@@ -206,7 +206,7 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasIndex("FactoryID");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Alert", b =>
