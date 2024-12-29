@@ -1,0 +1,44 @@
+﻿@model ProtoSCADA.Entities.Entities.Machine
+
+@{
+    ViewData["Title"] = "Machine Details";
+}
+
+@* Add Bootstrap for responsiveness and styling *@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="container my-5">
+    <h2 class="text-center text-primary mb-4">@ViewData["Title"]</h2>
+
+    <div class="card shadow-lg p-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="m-0">@Model.Name</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Status:</strong> <span class="badge bg-@(Model.Status.ToString() == "" ? "success" : "danger")">@Model.Status</span></p>
+                    <p><strong>Machine Type:</strong> @Model.Type</p>
+                    <p><strong>Last Maintenance:</strong> @Model.LastMaintance.ToShortDateString()</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Factory:</strong> @Model.Factory.Name</p>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a href="@Url.Action("Index", "Machine")" class="btn btn-secondary btn-lg">Go Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Adding some custom styling *@
+<style>
+    .badge {
+        font-size: 1rem;
+    }
+
+    .card-header {
+        font-size: 1.25rem;
+    }
+</style>

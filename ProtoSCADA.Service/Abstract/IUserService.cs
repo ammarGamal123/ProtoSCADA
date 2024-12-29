@@ -1,4 +1,5 @@
 ﻿using ProtoSCADA.Entities.Entities;
+using ProtoSCADA.Service.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace ProtoSCADA.Service.Abstract
 {
     public interface IUserService
     {
-        Task<User> GetUserByIdAsync(int id);
-        Task<IEnumerable<User>> GetAllUsersAsync();
-        Task AddUserAsync(User user);
-        Task UpdateUser(User user);
-        Task DeleteUserAsync(int id);
+        Task<ProcessResult<User>> GetUserByIdAsync(int id);
+        Task<ProcessResult<IEnumerable<User>>> GetAllUsersAsync();
+        Task<ProcessResult<bool>> AddUserAsync(User user);
+        Task<ProcessResult<bool>> UpdateUserAsync(User user);
+        Task<ProcessResult<bool>> DeleteUserAsync(int id);
     }
 }

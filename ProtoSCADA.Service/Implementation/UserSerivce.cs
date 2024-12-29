@@ -1,6 +1,7 @@
-﻿using ProtoSCADA.Data.Repositories;
+﻿using ProtoSCADA.Data.Interfaces;
 using ProtoSCADA.Entities.Entities;
 using ProtoSCADA.Service.Abstract;
+using ProtoSCADA.Service.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,76 +17,89 @@ namespace ProtoSCADA.Service.Implementation
             _unitOfWork = unitOfWork;
         }
 
-        public async Task AddUserAsync(User user)
+        // Add a new user
+        public async Task<ProcessResult<bool>> AddUserAsync(User user)
         {
+            if (user == null)
+                return ProcessResult<bool>.Failure("User cannot be null.", false);
+
             try
             {
-                if (user == null)
-                    throw new ArgumentNullException(nameof(user));
-
                 await _unitOfWork.Users.AddAsync(user);
                 await _unitOfWork.SaveAsync();
+                return ProcessResult<bool>.Success("User added successfully.", true);
             }
             catch (Exception ex)
             {
-                throw new ApplicationException($"Error adding user: {ex.Message}", ex);
+                return ProcessResult<bool>.Failure($"Error adding user: {ex.Message}", false);
             }
         }
 
-        public async Task DeleteUserAsync(int id)
-        {
-            try
-            {
-                await _unitOfWork.Users.DeleteAsync(id);
-                await _unitOfWork.SaveAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException($"Error deleting user with ID {id}: {ex.Message}", ex);
-            }
-        }
-
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
-        {
-            try
-            {
-                return await _unitOfWork.Users.GetAllAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException($"Error retrieving all users: {ex.Message}", ex);
-            }
-        }
-
-        public async Task<User> GetUserByIdAsync(int id)
+        // Delete a user by ID
+        public async Task<ProcessResult<bool>> DeleteUserAsync(int id)
         {
             try
             {
                 var user = await _unitOfWork.Users.GetByIdAsync(id);
                 if (user == null)
-                    throw new KeyNotFoundException($"User with ID {id} not found.");
+                    return ProcessResult<bool>.Failure($"No user found with ID {id}.", false);
 
-                return user;
+                await _unitOfWork.Users.DeleteAsync(id);
+                await _unitOfWork.SaveAsync();
+                return ProcessResult<bool>.Success("User deleted successfully.", true);
             }
             catch (Exception ex)
             {
-                throw new ApplicationException($"Error retrieving user by ID {id}: {ex.Message}", ex);
+                return ProcessResult<bool>.Failure($"Error deleting user: {ex.Message}", false);
             }
         }
 
-        public async Task UpdateUser(User user)
+        // Retrieve all users
+        public async Task<ProcessResult<IEnumerable<User>>> GetAllUsersAsync()
         {
             try
             {
-                if (user == null)
-                    throw new ArgumentNullException(nameof(user));
-
-                _unitOfWork.Users.Update(user);
-                await _unitOfWork.SaveAsync();
+                var users = await _unitOfWork.Users.GetAllAsync();
+                return ProcessResult<IEnumerable<User>>.Success("Users retrieved successfully.", users);
             }
             catch (Exception ex)
             {
-                throw new ApplicationException($"Error updating user: {ex.Message}", ex);
+                return ProcessResult<IEnumerable<User>>.Failure($"Error retrieving users: {ex.Message}", null);
+            }
+        }
+
+        // Retrieve a user by ID
+        public async Task<ProcessResult<User>> GetUserByIdAsync(int id)
+        {
+            try
+            {
+                var user = await _unitOfWork.Users.GetByIdAsync(id);
+                if (user == null)
+                    return ProcessResult<User>.Failure($"User with ID {id} not found.", null);
+
+                return ProcessResult<User>.Success("User retrieved successfully.", user);
+            }
+            catch (Exception ex)
+            {
+                return ProcessResult<User>.Failure($"Error retrieving user: {ex.Message}", null);
+            }
+        }
+
+        // Update a user's details
+        public async Task<ProcessResult<bool>> UpdateUserAsync(User user)
+        {
+            if (user == null)
+                return ProcessResult<bool>.Failure("User cannot be null.", false);
+
+            try
+            {
+                _unitOfWork.Users.Update(user);
+                await _unitOfWork.SaveAsync();
+                return ProcessResult<bool>.Success("User updated successfully.", true);
+            }
+            catch (Exception ex)
+            {
+                return ProcessResult<bool>.Failure($"Error updating user: {ex.Message}", false);
             }
         }
     }

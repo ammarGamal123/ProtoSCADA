@@ -1,22 +1,39 @@
-html {
-  font-size: 14px;
+/* site.css */
+
+/* Centering Titles */
+h2, h1 {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+/* Custom Table Styling */
+.table th {
+    background-color: #007bff;
+    color: white;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f2f2f2;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+/* Card-style layout for error messages */
+.alert {
+    border-radius: 0.5rem;
+    padding: 15px;
 }
 
-body {
-  margin-bottom: 60px;
+/* Custom Footer Styling */
+footer {
+    background-color: #343a40;
+    color: #ffffff;
+    padding: 20px 0;
 }
+
+    footer a {
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+        footer a:hover {
+            text-decoration: underline;
+        }

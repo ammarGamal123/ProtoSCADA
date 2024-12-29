@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProtoSCADA.Data.Repositories
+namespace ProtoSCADA.Data.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {
@@ -14,6 +14,6 @@ namespace ProtoSCADA.Data.Repositories
         Task AddAsync(T entity);
         void Update(T entity);
         Task DeleteAsync(int id);
-        Task<IEnumerable<T>> FindAsync (Expression<Func<T, bool>> predicate); // Query entities based on a condition
+        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate); // Query entities based on a condition
     }
 }

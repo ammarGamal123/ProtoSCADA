@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProtoSCADA.Data.Context;
+using ProtoSCADA.Data.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
