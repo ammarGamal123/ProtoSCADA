@@ -25,7 +25,13 @@ namespace ProtoSCADA.Data.Context
         public DbSet<Factory> Factorys { get; set; }   
         public DbSet<Machine> Machines { get; set; }
         public DbSet<Metric> Metrics { get; set; }
-        public DbSet<User> Users { get; set; } 
+        public DbSet<User> Users { get; set; }
+
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
+        }
 
 
 

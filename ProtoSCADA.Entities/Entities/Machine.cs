@@ -23,14 +23,14 @@ namespace ProtoSCADA.Entities.Entities
 
         [ForeignKey("Factory")]
         public int FactoryID { get; set; }
-        public Factory Factory { get; set; }
+        public virtual Factory Factory { get; set; }
 
 
-        public ICollection<Alert> Alerts { get; set; } = new HashSet<Alert>();
+        public virtual ICollection<Alert> Alerts { get; set; } = new HashSet<Alert>();
 
-        public ICollection<Event> Events { get; set; } = new HashSet<Event>();
+        public virtual ICollection<Event> Events { get; set; } = new HashSet<Event>();
 
-        public ICollection<Metric> Metrics { get; set; } = new HashSet<Metric>();
+        public virtual ICollection<Metric> Metrics { get; set; } = new HashSet<Metric>();
 
     }
     public enum MachineStatus : byte // so that we can optimize storage

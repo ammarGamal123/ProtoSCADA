@@ -18,9 +18,9 @@ namespace ProtoSCADA.Entities.Entities
 
         public DateTime CreatedAt { get; set; }
 
-        public ICollection<User> Users { get; set; } = new HashSet <User>();    
+        public virtual ICollection<User> Users { get; set; } = new HashSet <User>();    
 
-        public ICollection<Machine> Machines { get; set; } = new HashSet<Machine>();
+        public virtual ICollection<Machine> Machines { get; set; } = new HashSet<Machine>();
 
     }
 }

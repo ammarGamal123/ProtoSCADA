@@ -21,7 +21,7 @@ namespace ProtoSCADA.Entities.Entities
 
         [ForeignKey("Machine")]
         public int MachineID { get; set; }
-        public Machine Machine { get; set; }
+        public virtual Machine Machine { get; set; }
 
     }
 

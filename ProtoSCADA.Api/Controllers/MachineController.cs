@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProtoSCADA.Service.Abstract;
+using ProtoSCADA.Entities.DTOs;
+using ProtoSCADA.Service.Utilities;
 using ProtoSCADA.Entities.Entities;
 
 namespace ProtoSCADA.Api.Controllers
@@ -21,114 +19,113 @@ namespace ProtoSCADA.Api.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
- /*       // POST: api/machine
-        [HttpPost]
-        public async Task<IActionResult> CreateMachine([FromBody] Machine machine)
+        /// <summary>
+        /// Retrieves a machine by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the machine.</param>
+        /// <returns>A single machine DTO wrapped in a ProcessResult.</returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ProcessResult<MachineDto>>> GetMachineById(int id)
         {
-            if (machine == null)
-            {
-                _logger.LogWarning("Received null request body for machine creation.");
-                return BadRequest("Machine data cannot be null.");
-            }
+            _logger.LogInformation($"Fetching machine with ID: {id}");
 
             try
             {
-                var result = await _machineService.AddMachineAsync(machine);
-                return CreatedAtAction(nameof(GetMachineById), new { id = machine.ID }, machine);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while creating a machine.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
-        }
-*/
-        // GET: api/machine/{id}
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetMachineById(int id)
-        {
-            try
-            {
-                var machine = await _machineService.GetMachineByIdAsync(id);
-                if (machine == null)
+                var result = await _machineService.GetMachineByIdAsync(id);
+
+                if (!result.IsSuccess || result.Data == null)
                 {
                     _logger.LogWarning($"Machine with ID {id} not found.");
-                    return NotFound($"Machine with ID {id} not found.");
+                    return NotFound(ProcessResult<MachineDto>.Failure("Machine not found."));
                 }
 
-                return Ok(machine);
+                var machineDto = MapToDto(result.Data);
+                return Ok(ProcessResult<MachineDto>.Success(machineDto));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while retrieving the machine.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+                _logger.LogError(ex, $"Error while retrieving machine with ID {id}.");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    ProcessResult<MachineDto>.Failure("An error occurred while processing your request."));
             }
         }
 
-/*        // PUT: api/machine/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMachine(int id, [FromBody] Machine machine)
+        /// <summary>
+        /// Retrieves all machines.
+        /// </summary>
+        /// <returns>A list of machine DTOs wrapped in a ProcessResult.</returns>
+        [HttpGet]
+        public async Task<ActionResult<ProcessResult<IEnumerable<MachineDto>>>> GetAllMachines()
         {
-            if (machine == null)
-            {
-                _logger.LogWarning("Received null request body for machine update.");
-                return BadRequest("Machine data cannot be null.");
-            }
+            _logger.LogInformation("Fetching all machines.");
 
             try
             {
-                var updatedMachine = await _machineService.UpdateMachineAsync( machine);
-                if (updatedMachine == null)
+                var result = await _machineService.GetAllMachinesAsync();
+
+                if (!result.IsSuccess || result.Data == null || !result.Data.Any())
                 {
-                    _logger.LogWarning($"Machine with ID {id} not found for update.");
-                    return NotFound($"Machine with ID {id} not found.");
+                    _logger.LogWarning("No machines found.");
+                    return NotFound(ProcessResult<IEnumerable<MachineDto>>.Failure("No machines found."));
                 }
 
-                return Ok(updatedMachine);
+                var machinesDto = result.Data.Select(MapToDto).ToList();
+                return Ok(ProcessResult<IEnumerable<MachineDto>>.Success(machinesDto));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"An error occurred while updating machine with ID {id}.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+                _logger.LogError(ex, "Error while retrieving machines.");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    ProcessResult<IEnumerable<MachineDto>>.Failure("An error occurred while processing your request."));
             }
         }
-*/
-        // DELETE: api/machine/{id}
+
+        /// <summary>
+        /// Deletes a machine by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the machine to delete.</param>
+        /// <returns>204 No Content on success.</returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMachine(int id)
+        public async Task<ActionResult<ProcessResult<bool>>> DeleteMachine(int id)
         {
+            _logger.LogInformation($"Deleting machine with ID: {id}");
+
             try
             {
-                var deleted = await _machineService.DeleteMachineAsync(id);
-                if (!deleted.IsSuccess)
+                var result = await _machineService.DeleteMachineAsync(id);
+
+                if (!result.IsSuccess)
                 {
                     _logger.LogWarning($"Machine with ID {id} not found for deletion.");
-                    return NotFound($"Machine with ID {id} not found.");
+                    return NotFound(ProcessResult<MachineDto>.Failure("Machine not found."));
                 }
 
+                _logger.LogInformation($"Machine with ID {id} successfully deleted.");
                 return NoContent();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"An error occurred while deleting machine with ID {id}.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+                _logger.LogError(ex, $"Error while deleting machine with ID {id}.");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    Service.Utilities.ProcessResult<MachineDto>.Failure("An error occurred while processing your request."));
             }
         }
 
-        // GET: api/machine
-        [HttpGet]
-        public async Task<IActionResult> GetAllMachines()
+        /// <summary>
+        /// Maps a machine entity to its DTO representation.
+        /// </summary>
+        /// <param name="machine">The machine entity.</param>
+        /// <returns>The mapped MachineDto.</returns>
+        private static MachineDto MapToDto(Machine machine)
         {
-            try
+            return new MachineDto
             {
-                var machines = await _machineService.GetAllMachinesAsync();
-                return Ok(machines);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while retrieving machines.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
+                MachineID = machine.ID,
+                MachineType = machine.Type,
+                Status = machine.Status,
+                LastMaintance = machine.LastMaintance,
+                FactorName = machine.Factory?.Name // Safely access Factory properties
+            };
         }
     }
 }
