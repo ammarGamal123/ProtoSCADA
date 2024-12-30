@@ -123,7 +123,7 @@ namespace ProtoSCADA.Api.Controllers
                 MachineID = machine.ID,
                 MachineType = machine.Type,
                 Status = machine.Status,
-                LastMaintance = machine.LastMaintance,
+                LastMaintance = machine.LastMaintenance,
                 FactorName = machine.Factory?.Name // Safely access Factory properties
             };
         }

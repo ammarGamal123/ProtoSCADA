@@ -1,27 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using ProtoSCADA.Entities.Entities.Base;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProtoSCADA.Entities.Entities
 {
-    public class Metric
+    public class Metric : BaseEntity
     {
-        [Key]
-        public int ID { get; set; }
-
-        public DateTime TimeStamp { get; set; }
-
         public string Name { get; set; } = string.Empty;
-
-        public float Value {  get; set; }
-
+        public float Value { get; set; }
 
         [ForeignKey("Machine")]
-        public int MachineID {  get; set; }
+        public int MachineID { get; set; }
         public virtual Machine Machine { get; set; }
     }
 }

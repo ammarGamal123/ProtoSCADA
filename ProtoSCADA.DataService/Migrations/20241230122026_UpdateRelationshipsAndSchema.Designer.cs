@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProtoSCADA.Data.Context;
 
 #nullable disable
 
-namespace ProtoSCADA.DataService.Migrations
+namespace ProtoSCADA.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241230122026_UpdateRelationshipsAndSchema")]
+    partial class UpdateRelationshipsAndSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,7 +70,7 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Alerts", (string)null);
+                    b.ToTable("Alerts");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Event", b =>
@@ -114,7 +117,7 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Events", (string)null);
+                    b.ToTable("Events");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Factory", b =>
@@ -138,7 +141,7 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Factories", (string)null);
+                    b.ToTable("Factories");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Line", b =>
@@ -187,7 +190,7 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasIndex("SupervisorID");
 
-                    b.ToTable("Lines", (string)null);
+                    b.ToTable("Lines");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Machine", b =>
@@ -228,7 +231,7 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasIndex("LineID");
 
-                    b.ToTable("Machines", (string)null);
+                    b.ToTable("Machines");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Metric", b =>
@@ -256,7 +259,7 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasIndex("MachineID");
 
-                    b.ToTable("Metrics", (string)null);
+                    b.ToTable("Metrics");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Report", b =>
@@ -311,7 +314,7 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasIndex("LineID");
 
-                    b.ToTable("Reports", (string)null);
+                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Role", b =>
@@ -328,7 +331,7 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasKey("RoleID");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.User", b =>
@@ -371,7 +374,7 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasIndex("RoleID");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Alert", b =>

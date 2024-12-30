@@ -1,31 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using ProtoSCADA.Entities.Entities.Base;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProtoSCADA.Entities.Entities
 {
-    public class Alert
+    public class Alert : BaseEntity
     {
-        [Key]
-        public int ID { get; set; }
-
-        public float ThersholdValue {  get; set; }
-
+        public float ThresholdValue { get; set; }
         public AlertCondition Condition { get; set; }
-
-        public DateTime CreatedAt { get; set; }
 
         [ForeignKey("Machine")]
         public int MachineID { get; set; }
         public virtual Machine Machine { get; set; }
 
+        [ForeignKey("Line")]
+        public int LineID { get; set; }
+        public virtual Line Line { get; set; }
+
+        [ForeignKey("Factory")]
+        public int FactoryID { get; set; }
+        public virtual Factory Factory { get; set; }
     }
 
-    public enum AlertCondition : byte // so that we can optimize storage
+    public enum AlertCondition : byte
     {
         GreaterThan, LessThan, Equal
     }
