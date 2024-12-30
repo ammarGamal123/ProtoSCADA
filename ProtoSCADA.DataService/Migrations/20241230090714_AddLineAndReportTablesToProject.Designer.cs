@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProtoSCADA.Data.Context;
 
 #nullable disable
 
-namespace ProtoSCADA.DataService.Migrations
+namespace ProtoSCADA.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241230090714_AddLineAndReportTablesToProject")]
+    partial class AddLineAndReportTablesToProject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,20 +40,12 @@ namespace ProtoSCADA.DataService.Migrations
                         .HasColumnType("tinyint");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<int>("FactoryID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LineID")
-                        .HasColumnType("int");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("MachineID")
                         .HasColumnType("int");
 
-                    b.Property<float>("ThresholdValue")
+                    b.Property<float>("ThersholdValue")
                         .HasColumnType("real");
 
                     b.Property<int?>("UserID")
@@ -58,16 +53,11 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("FactoryID")
-                        .HasDatabaseName("IX_Alert_FactoryID");
-
-                    b.HasIndex("LineID");
-
                     b.HasIndex("MachineID");
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Alerts", (string)null);
+                    b.ToTable("Alerts");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Event", b =>
@@ -78,23 +68,15 @@ namespace ProtoSCADA.DataService.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FactoryID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LineID")
-                        .HasColumnType("int");
-
                     b.Property<int>("MachineID")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -105,16 +87,11 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("FactoryID")
-                        .HasDatabaseName("IX_Event_FactoryID");
-
-                    b.HasIndex("LineID");
-
                     b.HasIndex("MachineID");
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Events", (string)null);
+                    b.ToTable("Events");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Factory", b =>
@@ -138,7 +115,7 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Factories", (string)null);
+                    b.ToTable("Factorys");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Line", b =>
@@ -149,13 +126,8 @@ namespace ProtoSCADA.DataService.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("CreatedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -170,24 +142,25 @@ namespace ProtoSCADA.DataService.Migrations
                     b.Property<DateTime?>("LastMaintenanceDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("LineNumber")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ReportID")
+                        .HasColumnType("int");
 
                     b.Property<int>("SupervisorID")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("FactoryID")
-                        .HasDatabaseName("IX_Line_FactoryID");
+                    b.HasIndex("FactoryID");
+
+                    b.HasIndex("ReportID");
 
                     b.HasIndex("SupervisorID");
 
-                    b.ToTable("Lines", (string)null);
+                    b.ToTable("Lines");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Machine", b =>
@@ -198,21 +171,21 @@ namespace ProtoSCADA.DataService.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("FactoryID")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("LastMaintenance")
+                    b.Property<DateTime>("LastMaintance")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("LineID")
+                    b.Property<int?>("LineID")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ReportID")
+                        .HasColumnType("int");
 
                     b.Property<byte>("Status")
                         .HasColumnType("tinyint");
@@ -223,12 +196,13 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("FactoryID")
-                        .HasDatabaseName("IX_Machine_FactoryID");
+                    b.HasIndex("FactoryID");
 
                     b.HasIndex("LineID");
 
-                    b.ToTable("Machines", (string)null);
+                    b.HasIndex("ReportID");
+
+                    b.ToTable("Machines");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Metric", b =>
@@ -239,15 +213,18 @@ namespace ProtoSCADA.DataService.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("MachineID")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ReportID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
 
                     b.Property<float>("Value")
                         .HasColumnType("real");
@@ -256,7 +233,9 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasIndex("MachineID");
 
-                    b.ToTable("Metrics", (string)null);
+                    b.HasIndex("ReportID");
+
+                    b.ToTable("Metrics");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Report", b =>
@@ -267,11 +246,11 @@ namespace ProtoSCADA.DataService.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("CreatedByUserID")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -287,16 +266,14 @@ namespace ProtoSCADA.DataService.Migrations
                     b.Property<bool>("IsArchived")
                         .HasColumnType("bit");
 
-                    b.Property<int>("LineID")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tags")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -306,29 +283,9 @@ namespace ProtoSCADA.DataService.Migrations
 
                     b.HasIndex("CreatedByUserID");
 
-                    b.HasIndex("FactoryID")
-                        .HasDatabaseName("IX_Report_FactoryID");
+                    b.HasIndex("FactoryID");
 
-                    b.HasIndex("LineID");
-
-                    b.ToTable("Reports", (string)null);
-                });
-
-            modelBuilder.Entity("ProtoSCADA.Entities.Entities.Role", b =>
-                {
-                    b.Property<int>("RoleID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleID"));
-
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("RoleID");
-
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.User", b =>
@@ -346,10 +303,7 @@ namespace ProtoSCADA.DataService.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FactoryID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LineID")
+                    b.Property<int?>("FactoryID")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -360,80 +314,45 @@ namespace ProtoSCADA.DataService.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleID")
-                        .HasColumnType("int");
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
                     b.HasIndex("FactoryID");
 
-                    b.HasIndex("LineID");
-
-                    b.HasIndex("RoleID");
-
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Alert", b =>
                 {
-                    b.HasOne("ProtoSCADA.Entities.Entities.Factory", "Factory")
-                        .WithMany("Alerts")
-                        .HasForeignKey("FactoryID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ProtoSCADA.Entities.Entities.Line", "Line")
-                        .WithMany("Alerts")
-                        .HasForeignKey("LineID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("ProtoSCADA.Entities.Entities.Machine", "Machine")
                         .WithMany("Alerts")
                         .HasForeignKey("MachineID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ProtoSCADA.Entities.Entities.User", null)
                         .WithMany("Alerts")
                         .HasForeignKey("UserID");
 
-                    b.Navigation("Factory");
-
-                    b.Navigation("Line");
-
                     b.Navigation("Machine");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Event", b =>
                 {
-                    b.HasOne("ProtoSCADA.Entities.Entities.Factory", "Factory")
-                        .WithMany("Events")
-                        .HasForeignKey("FactoryID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ProtoSCADA.Entities.Entities.Line", "Line")
-                        .WithMany("Events")
-                        .HasForeignKey("LineID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("ProtoSCADA.Entities.Entities.Machine", "Machine")
                         .WithMany("Events")
                         .HasForeignKey("MachineID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ProtoSCADA.Entities.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Factory");
-
-                    b.Navigation("Line");
 
                     b.Navigation("Machine");
 
@@ -443,15 +362,19 @@ namespace ProtoSCADA.DataService.Migrations
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Line", b =>
                 {
                     b.HasOne("ProtoSCADA.Entities.Entities.Factory", "Factory")
-                        .WithMany("Lines")
+                        .WithMany()
                         .HasForeignKey("FactoryID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("ProtoSCADA.Entities.Entities.Report", null)
+                        .WithMany("Lines")
+                        .HasForeignKey("ReportID");
 
                     b.HasOne("ProtoSCADA.Entities.Entities.User", "Supervisor")
                         .WithMany()
                         .HasForeignKey("SupervisorID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Factory");
@@ -464,18 +387,18 @@ namespace ProtoSCADA.DataService.Migrations
                     b.HasOne("ProtoSCADA.Entities.Entities.Factory", "Factory")
                         .WithMany("Machines")
                         .HasForeignKey("FactoryID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ProtoSCADA.Entities.Entities.Line", "Line")
+                    b.HasOne("ProtoSCADA.Entities.Entities.Line", null)
                         .WithMany("Machines")
-                        .HasForeignKey("LineID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("LineID");
+
+                    b.HasOne("ProtoSCADA.Entities.Entities.Report", null)
+                        .WithMany("Machines")
+                        .HasForeignKey("ReportID");
 
                     b.Navigation("Factory");
-
-                    b.Navigation("Line");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Metric", b =>
@@ -483,8 +406,12 @@ namespace ProtoSCADA.DataService.Migrations
                     b.HasOne("ProtoSCADA.Entities.Entities.Machine", "Machine")
                         .WithMany("Metrics")
                         .HasForeignKey("MachineID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("ProtoSCADA.Entities.Entities.Report", null)
+                        .WithMany("Metrics")
+                        .HasForeignKey("ReportID");
 
                     b.Navigation("Machine");
                 });
@@ -494,79 +421,37 @@ namespace ProtoSCADA.DataService.Migrations
                     b.HasOne("ProtoSCADA.Entities.Entities.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedByUserID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ProtoSCADA.Entities.Entities.Factory", "Factory")
-                        .WithMany("Reports")
+                        .WithMany()
                         .HasForeignKey("FactoryID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ProtoSCADA.Entities.Entities.Line", "Line")
-                        .WithMany("Reports")
-                        .HasForeignKey("LineID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("CreatedByUser");
 
                     b.Navigation("Factory");
-
-                    b.Navigation("Line");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.User", b =>
                 {
-                    b.HasOne("ProtoSCADA.Entities.Entities.Factory", "Factory")
+                    b.HasOne("ProtoSCADA.Entities.Entities.Factory", null)
                         .WithMany("Users")
-                        .HasForeignKey("FactoryID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ProtoSCADA.Entities.Entities.Line", "Line")
-                        .WithMany()
-                        .HasForeignKey("LineID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ProtoSCADA.Entities.Entities.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Factory");
-
-                    b.Navigation("Line");
-
-                    b.Navigation("Role");
+                        .HasForeignKey("FactoryID");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Factory", b =>
                 {
-                    b.Navigation("Alerts");
-
-                    b.Navigation("Events");
-
-                    b.Navigation("Lines");
-
                     b.Navigation("Machines");
-
-                    b.Navigation("Reports");
 
                     b.Navigation("Users");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Line", b =>
                 {
-                    b.Navigation("Alerts");
-
-                    b.Navigation("Events");
-
                     b.Navigation("Machines");
-
-                    b.Navigation("Reports");
                 });
 
             modelBuilder.Entity("ProtoSCADA.Entities.Entities.Machine", b =>
@@ -574,6 +459,15 @@ namespace ProtoSCADA.DataService.Migrations
                     b.Navigation("Alerts");
 
                     b.Navigation("Events");
+
+                    b.Navigation("Metrics");
+                });
+
+            modelBuilder.Entity("ProtoSCADA.Entities.Entities.Report", b =>
+                {
+                    b.Navigation("Lines");
+
+                    b.Navigation("Machines");
 
                     b.Navigation("Metrics");
                 });

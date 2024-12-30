@@ -39,7 +39,7 @@ namespace ProtoSCADA.Api.Controllers
                         ID = user.ID,
                         Name = user.Name,
                         Email = user.Email,
-                        Role = user.Role,
+                        Role = user.Role.RoleName,
                         CreatedAt = user.CreatedAt
                     });
 
@@ -72,7 +72,7 @@ namespace ProtoSCADA.Api.Controllers
                         ID = result.Data.ID,
                         Name = result.Data.Name,
                         Email = result.Data.Email,
-                        Role = result.Data.Role,
+                        Role = result.Data.Role.RoleName,
                         CreatedAt = result.Data.CreatedAt
                     };
                     return Ok(ProcessResult<UserDto>.Success(result.Message, userDto));

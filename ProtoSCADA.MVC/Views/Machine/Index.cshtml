@@ -19,17 +19,18 @@
         <tbody>
             @foreach (var machine in Model)
             {
-                <tr>
-                    <td>@machine.MachineID</td>
-                    <td>@machine.MachineType</td>
-                    <td>@machine.Status</td>
-                    <td>@machine.LastMaintance.ToString("yyyy-MM-dd")</td>
-                    <td>@machine.FactorName</td>
-                    <td>
-                        <a href="/Machine/Details/@machine.MachineID" class="btn btn-info btn-sm">View Details</a>
-                        <a href="/Machine/Delete/@machine.MachineID" class="btn btn-danger btn-sm">Delete</a>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>@machine.MachineID</td>
+                        <td>@machine.MachineType</td>
+                        <td>@machine.Status</td>
+                        <td>@machine.LastMaintance.ToString("yyyy-MM-dd")</td>
+                        <td>@machine.FactorName</td>
+                        <td>
+                            <a href="/Machine/Details/@machine.MachineID" class="btn btn-info btn-sm">View Details</a>
+                            <a href="/Machine/Edit/@machine.MachineID" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="/Machine/Delete/@machine.MachineID" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
             }
         </tbody>
     </table>

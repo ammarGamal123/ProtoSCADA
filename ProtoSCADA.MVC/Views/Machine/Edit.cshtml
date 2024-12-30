@@ -1,5 +1,41 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model ProtoSCADA.Entities.DTOs.MachineDto
+
 @{
+    ViewData["Title"] = "Edit Machine";
 }
+
+<div class="mt-5 container">
+    <h2 class="mb-4 text-primary text-center">Edit Machine</h2>
+    <form asp-action="Edit" method="post">
+
+        <!-- Machine ID -->
+        <div class="form-group">
+            <label asp-for="MachineID">Machine ID</label>
+            <input asp-for="MachineID" class="form-control" readonly />
+        </div>
+
+        <!-- Machine Type -->
+        <div class="form-group">
+            <label asp-for="MachineType">Machine Type</label>
+            <input asp-for="MachineType" class="form-control" required />
+        </div>
+
+        <!-- Last Maintenance -->
+        <div class="form-group">
+            <label asp-for="LastMaintance">Last Maintenance</label>
+            <input asp-for="LastMaintance" type="date" class="form-control" required />
+        </div>
+
+        <!-- Factory Name -->
+        <div class="form-group">
+            <label asp-for="FactorName">Factory Name</label>
+            <input asp-for="FactorName" class="form-control" required />
+        </div>
+
+        <!-- Buttons -->
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a asp-action="Index" class="btn btn-secondary ml-3">Cancel</a>
+        </div>
+    </form>
+</div>
