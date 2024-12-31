@@ -40,7 +40,7 @@ namespace ProtoSCADA.Api.Controllers
                     return NotFound(ProcessResult<FactoryDto>.Failure("Factory not found."));
                 }
 
-                var factoryDto = MapToDto(result.Data); // Map Factory to FactoryDto
+                var factoryDto = MapToDto(result.Data); // Ensure this mapping works correctly
                 return Ok(ProcessResult<FactoryDto>.Success(factoryDto));
             }
             catch (Exception ex)

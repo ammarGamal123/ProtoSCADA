@@ -1,0 +1,43 @@
+﻿@model ProtoSCADA.Entities.DTOs.AlertDto
+
+@{
+    ViewData["Title"] = "Delete Alert";
+}
+
+<div class="mt-5 container">
+    <h2 class="text-danger mb-4">Delete Alert</h2>
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h4>Confirm Deletion</h4>
+        </div>
+        <div class="card-body">
+            <h5>Are you sure you want to delete this alert?</h5>
+            <dl class="row">
+                <dt class="col-sm-3">ID</dt>
+                <dd class="col-sm-9">@Model.ID</dd>
+
+                <dt class="col-sm-3">Threshold Value</dt>
+                <dd class="col-sm-9">@Model.ThresholdValue</dd>
+
+                <dt class="col-sm-3">Condition</dt>
+                <dd class="col-sm-9">@Model.Condition</dd>
+
+                <dt class="col-sm-3">Machine ID</dt>
+                <dd class="col-sm-9">@Model.MachineID</dd>
+
+                <dt class="col-sm-3">Line ID</dt>
+                <dd class="col-sm-9">@Model.LineID</dd>
+
+                <dt class="col-sm-3">Factory ID</dt>
+                <dd class="col-sm-9">@Model.FactoryID</dd>
+            </dl>
+        </div>
+        <div class="card-footer">
+            <form asp-action="ConfirmDelete" method="post">
+                <input type="hidden" asp-for="ID" />
+                <input type="submit" value="Delete" class="btn btn-danger" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </form>
+        </div>
+    </div>
+</div>

@@ -40,7 +40,7 @@ namespace ProtoSCADA.Api.Controllers
                     return NotFound(ProcessResult<AlertDto>.Failure("Alert not found."));
                 }
 
-                var alertDto = MapToDto(result.Data); // Map Alert to AlertDto
+                var alertDto = MapToDto(result.Data); // Ensure this mapping works correctly
                 return Ok(ProcessResult<AlertDto>.Success(alertDto));
             }
             catch (Exception ex)
