@@ -1,0 +1,51 @@
+﻿@model ProtoSCADA.Entities.DTOs.ReportDto
+
+@{
+    ViewData["Title"] = "Report Details";
+}
+
+<div class="mt-5 container">
+    <h2 class="text-primary text-center">Report Details</h2>
+    <div class="card">
+        <div class="card-header bg-info text-white">
+            <h4>Report Information</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">ID</dt>
+                <dd class="col-sm-9">@Model.ID</dd>
+
+                <dt class="col-sm-3">Name</dt>
+                <dd class="col-sm-9">@Model.Name</dd>
+
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">@Model.Description</dd>
+
+                <dt class="col-sm-3">Type</dt>
+                <dd class="col-sm-9">@Model.Type</dd>
+
+                <dt class="col-sm-3">Created By</dt>
+                <dd class="col-sm-9">@Model.CreatedByUserID</dd>
+
+                <dt class="col-sm-3">Is Archived</dt>
+                <dd class="col-sm-9">@(Model.IsArchived ? "Yes" : "No")</dd>
+
+                <dt class="col-sm-3">Factory ID</dt>
+                <dd class="col-sm-9">@Model.FactoryID</dd>
+
+                <dt class="col-sm-3">Line ID</dt>
+                <dd class="col-sm-9">@Model.LineID</dd>
+
+                <dt class="col-sm-3">Tags</dt>
+                <dd class="col-sm-9">@Model.Tags</dd>
+
+                <dt class="col-sm-3">File Path</dt>
+                <dd class="col-sm-9">@Model.FilePath</dd>
+            </dl>
+        </div>
+        <div class="card-footer">
+            <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-warning">Edit</a>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</div>

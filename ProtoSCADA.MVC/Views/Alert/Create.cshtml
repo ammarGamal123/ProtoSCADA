@@ -1,0 +1,60 @@
+﻿@model ProtoSCADA.Entities.DTOs.AlertDto
+
+@{
+    ViewData["Title"] = "Create Alert";
+}
+
+<div class="mt-5 container">
+    <h2 class="text-success mb-4">Create Alert</h2>
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4>Alert Details</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="ThresholdValue" class="control-label"></label>
+                    <input asp-for="ThresholdValue" class="form-control" />
+                    <span asp-validation-for="ThresholdValue" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Condition" class="control-label"></label>
+                    <input asp-for="Condition" class="form-control" />
+                    <span asp-validation-for="Condition" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="MachineID" class="control-label"></label>
+                    <input asp-for="MachineID" class="form-control" />
+                    <span asp-validation-for="MachineID" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="LineID" class="control-label"></label>
+                    <input asp-for="LineID" class="form-control" />
+                    <span asp-validation-for="LineID" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="FactoryID" class="control-label"></label>
+                    <input asp-for="FactoryID" class="form-control" />
+                    <span asp-validation-for="FactoryID" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mt-3">
+                    <input type="submit" value="Create" class="btn btn-success" />
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

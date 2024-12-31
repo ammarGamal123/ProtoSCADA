@@ -1,0 +1,39 @@
+﻿@model ProtoSCADA.Entities.DTOs.AlertDto
+
+@{
+    ViewData["Title"] = "Alert Details";
+}
+
+<div class="mt-5 container">
+    <h2 class="text-success mb-4">Alert Details</h2>
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4>Alert Information</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">ID</dt>
+                <dd class="col-sm-9">@Model.ID</dd>
+
+                <dt class="col-sm-3">Threshold Value</dt>
+                <dd class="col-sm-9">@Model.ThresholdValue</dd>
+
+                <dt class="col-sm-3">Condition</dt>
+                <dd class="col-sm-9">@Model.Condition</dd>
+
+                <dt class="col-sm-3">Machine ID</dt>
+                <dd class="col-sm-9">@Model.MachineID</dd>
+
+                <dt class="col-sm-3">Line ID</dt>
+                <dd class="col-sm-9">@Model.LineID</dd>
+
+                <dt class="col-sm-3">Factory ID</dt>
+                <dd class="col-sm-9">@Model.FactoryID</dd>
+            </dl>
+        </div>
+        <div class="card-footer">
+            <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-warning">Edit</a>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</div>
