@@ -9,5 +9,7 @@ namespace ProtoSCADA.Entities.DTOs
         public MachineStatus Status { get; set; }
         public DateTime LastMaintance { get; set;}
         public string FactorName { get; set; } = string.Empty;
-     }
+        public string LineName { get; set; } = string.Empty; // Name of the associated line
+
+    }
 }

@@ -1,57 +1,61 @@
 ﻿using ProtoSCADA.Data.Context;
-using ProtoSCADA.Data.Context;
 using ProtoSCADA.Data.Interfaces;
 using ProtoSCADA.Entities.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ProtoSCADA.Data.Repositories
+public class UnitOfWork : IUnitOfWork
 {
-    public class UnitOfWork : IUnitOfWork
+    private readonly ApplicationDbContext _context;
+    private bool _disposed = false;
+
+    public UnitOfWork(ApplicationDbContext context)
     {
-        private readonly ApplicationDbContext _context;
-        public IGenericRepository<User> Users { get; private set; }
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+    }
 
-        public IGenericRepository<Machine> Machines { get; private set; }
+    private IGenericRepository<User> _users;
+    public IGenericRepository<User> Users => _users ??= new GenericRepository<User>(_context);
 
-        public IGenericRepository<Metric> Metrics { get; private set; }
+    private IGenericRepository<Machine> _machines;
+    public IGenericRepository<Machine> Machines => _machines ??= new GenericRepository<Machine>(_context);
 
-        public IGenericRepository<Factory> Factorys { get; private set; }
+    private IGenericRepository<Metric> _metrics;
+    public IGenericRepository<Metric> Metrics => _metrics ??= new GenericRepository<Metric>(_context);
 
-        public IGenericRepository<Alert> Alerts { get; private set; }
+    private IGenericRepository<Factory> _factories;
+    public IGenericRepository<Factory> Factories => _factories ??= new GenericRepository<Factory>(_context);
 
-        public IGenericRepository<Event> Events { get; private set; }
+    private IGenericRepository<Alert> _alerts;
+    public IGenericRepository<Alert> Alerts => _alerts ??= new GenericRepository<Alert>(_context);
 
-        public UnitOfWork(ApplicationDbContext context)
+    private IGenericRepository<Event> _events;
+    public IGenericRepository<Event> Events => _events ??= new GenericRepository<Event>(_context);
+
+    private IGenericRepository<Report> _reports;
+    public IGenericRepository<Report> Reports => _reports ??= new GenericRepository<Report>(_context);
+
+    private IGenericRepository<Line> _lines;
+    public IGenericRepository<Line> Lines => _lines ??= new GenericRepository<Line>(_context);
+
+    public async Task<int> SaveAsync()
+    {
+        return await _context.SaveChangesAsync();
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
         {
-            _context = context;
-            Users = new GenericRepository<User>(_context);
-            Machines = new GenericRepository<Machine>(_context);
-            Metrics = new GenericRepository<Metric>(_context);
-            Factorys = new GenericRepository<Factory>(_context);
-            Alerts = new GenericRepository<Alert>(_context);
-            Events = new GenericRepository<Event>(_context);
-
-        }
-
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
-
-        public async Task<int> SaveAsync()
-        {
-            try
+            if (disposing)
             {
-                return await _context.SaveChangesAsync();
+                _context.Dispose();
             }
-            catch (Exception ex)
-            {
-                throw new ApplicationException($"Error saving changes: {ex.Message}", ex);
-            }
+            _disposed = true;
         }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }

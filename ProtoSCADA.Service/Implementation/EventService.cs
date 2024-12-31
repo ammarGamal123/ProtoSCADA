@@ -2,8 +2,11 @@
 using ProtoSCADA.Entities.Entities;
 using ProtoSCADA.Service.Abstract;
 using ProtoSCADA.Service.Utilities;
+using ProtoSCADA.Service.Validation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ProtoSCADA.Service
@@ -11,26 +14,28 @@ namespace ProtoSCADA.Service
     public class EventService : IEventService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IEventRepository _eventRepository;
 
-        public EventService(IUnitOfWork unitOfWork)
+        public EventService(IUnitOfWork unitOfWork, IEventRepository eventRepository = null)
         {
             _unitOfWork = unitOfWork;
+            _eventRepository = eventRepository;
         }
 
-        public async Task<ProcessResult<bool>> AddEventAsync(Event eventEntity)
+        public async Task<ProcessResult<bool>> AddEventAsync(Event evnt)
         {
-            if (eventEntity == null)
-                return ProcessResult<bool>.Failure("Event cannot be null.", false);
-
             try
             {
-                await _unitOfWork.Events.AddAsync(eventEntity);
+                if (evnt == null)
+                    return ProcessResult<bool>.Failure("Event cannot be null.");
+
+                await _unitOfWork.Events.AddAsync(evnt);
                 await _unitOfWork.SaveAsync();
-                return ProcessResult<bool>.Success("Event added successfully.", true);
+                return ProcessResult<bool>.Success(true);
             }
             catch (Exception ex)
             {
-                return ProcessResult<bool>.Failure($"Error adding event: {ex.Message}", false);
+                return ProcessResult<bool>.Failure($"Error adding event: {ex.Message}");
             }
         }
 
@@ -38,30 +43,40 @@ namespace ProtoSCADA.Service
         {
             try
             {
-                var eventEntity = await _unitOfWork.Events.GetByIdAsync(id);
-                if (eventEntity == null)
-                    return ProcessResult<bool>.Failure($"No event found with ID {id}.", false);
+                var evnt = await _unitOfWork.Events.GetByIdAsync(id);
+                if (evnt == null)
+                    return ProcessResult<bool>.Failure($"Event with ID {id} not found.");
 
                 await _unitOfWork.Events.DeleteAsync(id);
                 await _unitOfWork.SaveAsync();
-                return ProcessResult<bool>.Success("Event deleted successfully.", true);
+                return ProcessResult<bool>.Success(true);
             }
             catch (Exception ex)
             {
-                return ProcessResult<bool>.Failure($"Error deleting event: {ex.Message}", false);
+                return ProcessResult<bool>.Failure($"Error deleting event: {ex.Message}");
             }
         }
 
-        public async Task<ProcessResult<IEnumerable<Event>>> GetAllEventsAsync()
+        public async Task<ProcessResult<IEnumerable<Event>>> GetAllEventsAsync(int pageNumber, int pageSize)
         {
             try
             {
-                var events = await _unitOfWork.Events.GetAllAsync();
-                return ProcessResult<IEnumerable<Event>>.Success("Events retrieved successfully.", events);
+                var validationResult = ValidatePagination.Validate(pageNumber, pageSize);
+                if (!validationResult.IsSuccess)
+                {
+                    return ProcessResult<IEnumerable<Event>>.Failure(validationResult.Message);
+                }
+                var events = await _eventRepository.GetAllAsync();
+                var paginatedEvents = events
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                return ProcessResult<IEnumerable<Event>>.Success(paginatedEvents);
             }
             catch (Exception ex)
             {
-                return ProcessResult<IEnumerable<Event>>.Failure($"Error retrieving events: {ex.Message}", null);
+                return ProcessResult<IEnumerable<Event>>.Failure($"Error retrieving events: {ex.Message}");
             }
         }
 
@@ -69,32 +84,32 @@ namespace ProtoSCADA.Service
         {
             try
             {
-                var eventEntity = await _unitOfWork.Events.GetByIdAsync(id);
-                if (eventEntity == null)
-                    return ProcessResult<Event>.Failure($"Event with ID {id} not found.", null);
+                var evnt = await _eventRepository.GetByIdAsync(id);
+                if (evnt == null)
+                    return ProcessResult<Event>.Failure($"Event with ID {id} not found.");
 
-                return ProcessResult<Event>.Success("Event retrieved successfully.", eventEntity);
+                return ProcessResult<Event>.Success(evnt);
             }
             catch (Exception ex)
             {
-                return ProcessResult<Event>.Failure($"Error retrieving event: {ex.Message}", null);
+                return ProcessResult<Event>.Failure($"Error retrieving event: {ex.Message}");
             }
         }
 
-        public async Task<ProcessResult<bool>> UpdateEventAsync(Event eventEntity)
+        public async Task<ProcessResult<bool>> UpdateEventAsync(Event evnt)
         {
-            if (eventEntity == null)
-                return ProcessResult<bool>.Failure("Event cannot be null.", false);
-
             try
             {
-                _unitOfWork.Events.Update(eventEntity);
+                if (evnt == null)
+                    return ProcessResult<bool>.Failure("Event cannot be null.");
+
+                _unitOfWork.Events.Update(evnt);
                 await _unitOfWork.SaveAsync();
-                return ProcessResult<bool>.Success("Event updated successfully.", true);
+                return ProcessResult<bool>.Success(true);
             }
             catch (Exception ex)
             {
-                return ProcessResult<bool>.Failure($"Error updating event: {ex.Message}", false);
+                return ProcessResult<bool>.Failure($"Error updating event: {ex.Message}");
             }
         }
     }
