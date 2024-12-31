@@ -1,19 +1,23 @@
 ﻿using ProtoSCADA.Data.Interfaces;
 using ProtoSCADA.Entities.Entities;
+using ProtoSCADA.Entities.DTOs;
 using ProtoSCADA.Service.Abstract;
 using ProtoSCADA.Service.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using ProtoSCADA.Service.Validation;
 
 namespace ProtoSCADA.Service.Implementation
 {
     public class UserService : IUserService
     {
+        private readonly IUserRepository _userRepository;
         private readonly IUnitOfWork _unitOfWork;
-
-        public UserService(IUnitOfWork unitOfWork)
+        public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork = null)
         {
+            _userRepository = userRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -40,7 +44,7 @@ namespace ProtoSCADA.Service.Implementation
         {
             try
             {
-                var user = await _unitOfWork.Users.GetByIdAsync(id);
+                var user = await _userRepository.GetByIdAsync(id);
                 if (user == null)
                     return ProcessResult<bool>.Failure($"No user found with ID {id}.", false);
 
@@ -54,11 +58,17 @@ namespace ProtoSCADA.Service.Implementation
             }
         }
 
-        public async Task<ProcessResult<IEnumerable<User>>> GetAllUsersAsync()
+        // Retrieve all users
+        public async Task<ProcessResult<IEnumerable<User>>> GetAllUsersAsync(int pageNumber , int pageSize)
         {
             try
             {
-                var users = await _unitOfWork.Users.GetAllAsync();
+                var validationResult = ValidatePagination.Validate(pageNumber, pageSize);
+                if (!validationResult.IsSuccess)
+                {
+                    return ProcessResult<IEnumerable<User>>.Failure(validationResult.Message);
+                }
+                var users = await _userRepository.GetAllAsync();
 
                 // Return success result with data
                 return ProcessResult<IEnumerable<User>>.Success("Users retrieved successfully.", users);
@@ -70,13 +80,12 @@ namespace ProtoSCADA.Service.Implementation
             }
         }
 
-
         // Retrieve a user by ID
         public async Task<ProcessResult<User>> GetUserByIdAsync(int id)
         {
             try
             {
-                var user = await _unitOfWork.Users.GetByIdAsync(id);
+                var user = await _userRepository.GetByIdAsync(id);
                 if (user == null)
                     return ProcessResult<User>.Failure($"User with ID {id} not found.", null);
 
@@ -103,6 +112,37 @@ namespace ProtoSCADA.Service.Implementation
             catch (Exception ex)
             {
                 return ProcessResult<bool>.Failure($"Error updating user: {ex.Message}", false);
+            }
+        }
+
+        // Retrieve all users as DTOs (if needed)
+        public async Task<ProcessResult<IEnumerable<UserDto>>> GetAllUsersDtoAsync(int pageNumber, int pageSize)
+        {
+            try
+            {
+                var users = await _userRepository.GetAllUsersAsync(pageNumber, pageSize);
+                return ProcessResult<IEnumerable<UserDto>>.Success("Users retrieved successfully.", users);
+            }
+            catch (Exception ex)
+            {
+                return ProcessResult<IEnumerable<UserDto>>.Failure($"Error retrieving users: {ex.Message}", Enumerable.Empty<UserDto>());
+            }
+        }
+
+        // Retrieve a user by ID as DTO (if needed)
+        public async Task<ProcessResult<UserDto>> GetUserDtoByIdAsync(int id)
+        {
+            try
+            {
+                var user = await _userRepository.GetUserByIdAsync(id);
+                if (user == null)
+                    return ProcessResult<UserDto>.Failure($"User with ID {id} not found.", null);
+
+                return ProcessResult<UserDto>.Success("User retrieved successfully.", user);
+            }
+            catch (Exception ex)
+            {
+                return ProcessResult<UserDto>.Failure($"Error retrieving user: {ex.Message}", null);
             }
         }
     }

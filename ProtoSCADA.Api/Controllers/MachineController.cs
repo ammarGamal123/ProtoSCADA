@@ -50,18 +50,14 @@ namespace ProtoSCADA.Api.Controllers
             }
         }
 
-        /// <summary>
-        /// Retrieves all machines.
-        /// </summary>
-        /// <returns>A list of machine DTOs wrapped in a ProcessResult.</returns>
         [HttpGet]
-        public async Task<ActionResult<ProcessResult<IEnumerable<MachineDto>>>> GetAllMachines()
+        public async Task<ActionResult<ProcessResult<IEnumerable<MachineDto>>>> GetAllMachines(int pageNumber = 1, int pageSize = 10)
         {
             _logger.LogInformation("Fetching all machines.");
 
             try
             {
-                var result = await _machineService.GetAllMachinesAsync();
+                var result = await _machineService.GetAllMachinesAsync(pageNumber, pageSize);
 
                 if (!result.IsSuccess || result.Data == null || !result.Data.Any())
                 {
@@ -69,8 +65,7 @@ namespace ProtoSCADA.Api.Controllers
                     return NotFound(ProcessResult<IEnumerable<MachineDto>>.Failure("No machines found."));
                 }
 
-                var machinesDto = result.Data.Select(MapToDto).ToList();
-                return Ok(ProcessResult<IEnumerable<MachineDto>>.Success(machinesDto));
+                return Ok(ProcessResult<IEnumerable<MachineDto>>.Success(result.Data));
             }
             catch (Exception ex)
             {

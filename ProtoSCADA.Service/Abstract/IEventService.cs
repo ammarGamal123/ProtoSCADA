@@ -11,9 +11,9 @@ namespace ProtoSCADA.Service.Abstract
     public interface IEventService
     {
         Task<ProcessResult<Event>> GetEventByIdAsync(int id);
-        Task<ProcessResult<IEnumerable<Event>>> GetAllEventsAsync();
-        Task<ProcessResult<bool>> AddEventAsync(Event eventEntity);
-        Task<ProcessResult<bool>> UpdateEventAsync(Event eventEntity);
+        Task<ProcessResult<IEnumerable<Event>>> GetAllEventsAsync(int pageNumber , int pageSize);
+        Task<ProcessResult<bool>> AddEventAsync(Event evt);
+        Task<ProcessResult<bool>> UpdateEventAsync(Event evt);
         Task<ProcessResult<bool>> DeleteEventAsync(int id);
     }
 }

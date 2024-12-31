@@ -1,43 +1,35 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProtoSCADA.Data.Context;
 using ProtoSCADA.Data.Interfaces;
+using ProtoSCADA.Entities.DTOs;
 using ProtoSCADA.Entities.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ProtoSCADA.Data.Repositories
+public class MachineRepository : GenericRepository<Machine>, IMachineRepository
 {
-    public class MachineRepository : GenericRepository<Machine> , IMachineRepository
+    public MachineRepository(ApplicationDbContext context) : base(context) { }
+
+    public async Task<Machine> GetMachineByIdAsync(int machineId)
     {
-        public MachineRepository(ApplicationDbContext context) : base(context) { }
+        return await _dbSet.Include(m => m.Factory)
+                           .AsNoTracking()
+                           .FirstOrDefaultAsync(m => m.ID == machineId);
+    }
 
-        public async Task<IEnumerable<Machine>> GetAllMachinesAsync()
-        {
-            try
+    public async Task<IEnumerable<MachineDto>> GetAllMachinesAsync(int pageNumber, int pageSize)
+    {
+        return await _dbSet
+            .Include(m => m.Factory)
+            .Select(m => new MachineDto
             {
-                return await _dbSet.Include(m => m.Factory)
-                    .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-
-        public async Task<Machine> GetMachineByIdAsync(int machineId)
-        {
-            try
-            {
-                return await _dbSet.Include(m => m.Factory).FirstOrDefaultAsync(m => m.ID == machineId);
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-
+                MachineID = m.ID,
+                MachineType = m.Type,
+                Status = m.Status,
+                LastMaintance = m.LastMaintenance,
+                FactorName = m.Factory.Name
+            })
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .AsNoTracking()
+            .ToListAsync();
     }
 }
