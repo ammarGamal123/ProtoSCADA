@@ -1,41 +1,43 @@
-﻿@model IEnumerable<ProtoSCADA.Entities.DTOs.UserDto>
+﻿@model List<ProtoSCADA.Entities.DTOs.LineDto>
 
 @{
-    ViewData["Title"] = "User List";
+    ViewData["Title"] = "Line List";
     int pageNumber = ViewBag.PageNumber ?? 1;
     int pageSize = ViewBag.PageSize ?? 10;
     int totalPages = ViewBag.TotalPages ?? 1;
 }
 
 <div class="mt-5 container">
-    <h2 class="mb-4 text-success text-center">User List</h2>
+    <h2 class="mb-4 text-success text-center">Line List</h2>
     <div class="card">
         <div class="card-header bg-primary text-white">
-            <h4>User Details</h4>
+            <h4>Line Details</h4>
         </div>
         <div class="card-body">
             <table class="table-striped table">
                 <thead>
                     <tr>
-                        <th scope="col">User ID</th>
-                        <th scope="col">Username</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Created At</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Factory Name</th>
+                        <th scope="col">Line Number</th>
+                        <th scope="col">Supervisor Name</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var user in Model)
+                    @foreach (var line in Model)
                     {
                         <tr>
-                            <td>@user.ID</td>
-                            <td>@user.Name</td>
-                            <td>@user.Email</td>
-                            <td>@user.CreatedAt</td>
+                            <td>@line.ID</td>
+                            <td>@line.Name</td>
+                            <td>@line.FactoryName</td>
+                            <td>@line.LineNumber</td>
+                            <td>@line.SupervisorName</td>
                             <td>
-                                <a href="/User/Details/@user.ID" class="btn btn-info btn-sm">Details</a>
-                                <a href="/User/Edit/@user.ID" class="btn btn-warning btn-sm">Edit</a>
-                                <a href="/User/Delete/@user.ID" class="btn btn-danger btn-sm">Delete</a>
+                                <a asp-action="Details" asp-route-id="@line.ID" class="btn btn-info btn-sm">Details</a>
+                                <a asp-action="Edit" asp-route-id="@line.ID" class="btn btn-warning btn-sm">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@line.ID" class="btn btn-danger btn-sm">Delete</a>
                             </td>
                         </tr>
                     }
@@ -45,24 +47,29 @@
         <div class="card-footer">
             <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
+                    <!-- Previous Button -->
                     @if (pageNumber > 1)
                     {
                         <li class="page-item">
-                            <a class="page-link" href="/User/Index?pageNumber=@(pageNumber - 1)&pageSize=@pageSize" aria-label="Previous">
+                            <a class="page-link" href="/Line/Index?pageNumber=@(pageNumber - 1)&pageSize=@pageSize" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
                     }
+
+                    <!-- Page Numbers -->
                     @for (int i = 1; i <= totalPages; i++)
                     {
                         <li class="page-item @(i == pageNumber ? "active" : "")">
-                            <a class="page-link" href="/User/Index?pageNumber=@i&pageSize=@pageSize">@i</a>
+                            <a class="page-link" href="/Line/Index?pageNumber=@i&pageSize=@pageSize">@i</a>
                         </li>
                     }
+
+                    <!-- Next Button -->
                     @if (pageNumber < totalPages)
                     {
                         <li class="page-item">
-                            <a class="page-link" href="/User/Index?pageNumber=@(pageNumber + 1)&pageSize=@pageSize" aria-label="Next">
+                            <a class="page-link" href="/Line/Index?pageNumber=@(pageNumber + 1)&pageSize=@pageSize" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
@@ -72,6 +79,6 @@
         </div>
     </div>
     <div class="mt-3">
-        <a href="/User/Create" class="btn btn-success">Add New User</a>
+        <a href="/Line/Create" class="btn btn-success">Add New Line</a>
     </div>
 </div>

@@ -1,0 +1,55 @@
+﻿@model ProtoSCADA.Entities.DTOs.EventDto
+
+@{
+    ViewData["Title"] = "Edit Event";
+}
+
+<div class="mt-5 container">
+    <h2 class="text-success mb-4">Edit Event</h2>
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4>Event Details</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="ID" />
+
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="MachineID" class="control-label"></label>
+                    <input asp-for="MachineID" class="form-control" />
+                    <span asp-validation-for="MachineID" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="LineID" class="control-label"></label>
+                    <input asp-for="LineID" class="form-control" />
+                    <span asp-validation-for="LineID" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="FactoryID" class="control-label"></label>
+                    <input asp-for="FactoryID" class="form-control" />
+                    <span asp-validation-for="FactoryID" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mt-3">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

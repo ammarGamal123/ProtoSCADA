@@ -1,0 +1,45 @@
+﻿@model ProtoSCADA.Entities.DTOs.LineDto
+
+@{
+    ViewData["Title"] = "Line Details";
+}
+
+<div class="mt-5 container">
+    <h2 class="text-primary text-center">Line Details</h2>
+    <div class="card">
+        <div class="card-header bg-info text-white">
+            <h4>Line Information</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">ID</dt>
+                <dd class="col-sm-9">@Model.ID</dd>
+
+                <dt class="col-sm-3">Name</dt>
+                <dd class="col-sm-9">@Model.Name</dd>
+
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">@Model.Description</dd>
+
+                <dt class="col-sm-3">Line Number</dt>
+                <dd class="col-sm-9">@Model.LineNumber</dd>
+
+                <dt class="col-sm-3">Factory Name</dt>
+                <dd class="col-sm-9">@Model.FactoryName</dd>
+
+                <dt class="col-sm-3">Last Maintenance Date</dt>
+                <dd class="col-sm-9">@Model.LastMaintenanceDate?.ToString("yyyy-MM-dd")</dd>
+
+                <dt class="col-sm-3">Is Active</dt>
+                <dd class="col-sm-9">@(Model.IsActive ? "Yes" : "No")</dd>
+
+                <dt class="col-sm-3">Supervisor Name</dt>
+                <dd class="col-sm-9">@Model.SupervisorName</dd>
+            </dl>
+        </div>
+        <div class="card-footer">
+            <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-warning">Edit</a>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</div>

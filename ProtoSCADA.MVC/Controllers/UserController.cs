@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
 using ProtoSCADA.Service.Utilities;
+using ProtoSCADA.Entities.DTOs;
 
 namespace ProtoSCADA.MVC.Controllers
 {
@@ -25,11 +26,11 @@ namespace ProtoSCADA.MVC.Controllers
         }
 
         // GET: User/Index
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var response = await _httpClient.GetFromJsonAsync<ProcessResult<List<User>>>("api/User");
+                var response = await _httpClient.GetFromJsonAsync<ProcessResult<List<UserDto>>>($"api/User?pageNumber={pageNumber}&pageSize={pageSize}");
                 if (response?.IsSuccess == true && response.Data != null)
                 {
                     return View(response.Data);

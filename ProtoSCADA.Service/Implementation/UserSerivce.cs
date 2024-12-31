@@ -58,20 +58,28 @@ namespace ProtoSCADA.Service.Implementation
             }
         }
 
-        // Retrieve all users
-        public async Task<ProcessResult<IEnumerable<User>>> GetAllUsersAsync(int pageNumber , int pageSize)
+        public async Task<ProcessResult<IEnumerable<User>>> GetAllUsersAsync(int pageNumber, int pageSize)
         {
             try
             {
+                // Validate pagination parameters
                 var validationResult = ValidatePagination.Validate(pageNumber, pageSize);
                 if (!validationResult.IsSuccess)
                 {
                     return ProcessResult<IEnumerable<User>>.Failure(validationResult.Message);
                 }
+
+                // Fetch all users from the repository
                 var users = await _userRepository.GetAllAsync();
 
-                // Return success result with data
-                return ProcessResult<IEnumerable<User>>.Success("Users retrieved successfully.", users);
+                // Apply pagination
+                var paginatedUsers = users
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                // Return success result with paginated data
+                return ProcessResult<IEnumerable<User>>.Success("Users retrieved successfully.", paginatedUsers);
             }
             catch (Exception ex)
             {
