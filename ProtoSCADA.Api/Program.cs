@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Logging;
 using ProtoSCADA.Data.Context;
 using ProtoSCADA.Data.Interfaces;
-using ProtoSCADA.Data.Repositories;
 using ProtoSCADA.Entities.Entities;
 using ProtoSCADA.Service;
 using ProtoSCADA.Service.Abstract;
@@ -26,13 +25,26 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Dependency Injection setup so that it can be seen in controllers or services
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+
+// services
 builder.Services.AddScoped(typeof(IUserService), typeof(UserService));
 builder.Services.AddScoped(typeof(IAlertService), typeof(AlertService));
 builder.Services.AddScoped(typeof(IMachineService), typeof(MachineService));
 builder.Services.AddScoped(typeof(IMetricService), typeof(MetricService));
 builder.Services.AddScoped(typeof(IFactoryService), typeof(FactoryService));
 builder.Services.AddScoped(typeof(IEventService), typeof(EventService));
+builder.Services.AddScoped(typeof(IReportService), typeof(ReportService));
+builder.Services.AddScoped(typeof(ILineService), typeof(LineService));
+
+// repositories
+builder.Services.AddScoped(typeof(IFactoryRepository), typeof(FactoryRepository));
 builder.Services.AddScoped(typeof(IMachineRepository) , typeof(MachineRepository));
+builder.Services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
+builder.Services.AddScoped(typeof(IAlertRepository), typeof(AlertRepository));
+builder.Services.AddScoped(typeof(IReportRepository), typeof(ReportRepository));
+builder.Services.AddScoped(typeof(IEventRepository), typeof(EventRepository));
+builder.Services.AddScoped(typeof(ILineRepository), typeof(LineRepository));
+
 
 
 

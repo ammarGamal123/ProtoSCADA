@@ -1,15 +1,9 @@
-﻿using ProtoSCADA.Entities.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ProtoSCADA.Data.Interfaces;
+using ProtoSCADA.Entities.DTOs;
+using ProtoSCADA.Entities.Entities;
 
-namespace ProtoSCADA.Data.Interfaces
+public interface IMachineRepository : IGenericRepository<Machine>
 {
-    public interface IMachineRepository : IGenericRepository<Machine>
-    {
-        Task<IEnumerable<Machine>> GetAllMachinesAsync();
-        Task<Machine> GetMachineByIdAsync(int machineId);
-    }
+    Task<IEnumerable<MachineDto>> GetAllMachinesAsync(int pageNumber, int pageSize);
+    Task<Machine> GetMachineByIdAsync(int machineId);
 }
